@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-gb">
+
+<head>
+  <meta charset="utf-8">
+  <title>Coupang link generator</title>
+  <!-- UIkit CSS -->
+  <link rel="stylesheet" href="css/uikit.min.css" />
+
+  <!-- UIkit JS -->
+  <script src="js/uikit.min.js"></script>
+  <script src="js/uikit-icons.min.js"></script>
+  <script src="js/jquery.js"></script>
+
+  <style>
+    .uk-textarea {
+      font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+    }
+  </style>
+</head>
+
+<body>
+
+    <fieldset class="uk-fieldset">
+      <legend class="uk-legend">Paste URLs</legend>
+      <div class="uk-margin">
+        <textarea class="uk-textarea" id="urls" rows="5" placeholder=""></textarea>
+      </div>
+      <legend class="uk-legend">Compact links</legend>
+      <div class="uk-margin">
+        <pre><code id="urls-done"></code></pre>
+      </div>
+      <div class="uk-margin">
+        <button class="uk-button uk-button-primary" onClick="sendRequest();">Submit request</button>
+      </div>
+    </fieldset>
+  <script language="javascript">
+    function sendRequest() {
+      $.ajax({
+        type: "POST",
+        url: "request.php",
+        data: {
+          urls: $("#urls").val()
+        },
+        success: function (data) {
+          data = data.trim();
+          if (data.length === 0) {
+            return;
+          }
+          console.log("data");
+          console.log(data);
+          let json = JSON.parse(data.trim());
+          console.log("json");
+          console.log(json);
+          json.data.forEach(function (item) {
+            $("#urls-done").append(item.shortenUrl + "\n");
+          })
+        },
+        dataType: "text"
+      });
+    }
+  </script>
+</body>
+
+</html>
